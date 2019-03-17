@@ -1,0 +1,27 @@
+﻿<Window x:Class="PlanetariumWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PlanetariumWpf"
+        mc:Ignorable="d"
+        Title="Planetarium" Height="450" Width="800"
+        WindowState="Maximized">
+    <Window.Resources>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Foreground="Black">
+            Scale: <TextBlock Text="{Binding Path=(local:WorldState.Scale), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            Offset: <TextBlock Text="{Binding Path=(local:WorldState.Offset), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </TextBlock>
+        <Button Name="PlanetGeneratorButton" Grid.Row="1">Create 100 planets</Button>
+        <Canvas Grid.Row="2" Name="World" Background="#FF040027">
+        </Canvas>
+    </Grid>
+</Window>
