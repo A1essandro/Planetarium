@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using VectorAndPoint.ValTypes;
 
 namespace Planetarium
 {
@@ -73,7 +74,7 @@ namespace Planetarium
 
             var speed = new Vector(gravity * (to.Position.X - from.Position.X), gravity * (to.Position.Y - from.Position.Y));
 
-            var withInertia = speed / from.Mass;
+            var withInertia = speed * (1 / from.Mass);
             return withInertia;
         }
 

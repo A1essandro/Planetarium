@@ -1,7 +1,7 @@
 ﻿using Planetarium;
-using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using VectorAndPoint.ValTypes;
 
 namespace PlanetariumWpf.Model
 {
@@ -28,7 +28,7 @@ namespace PlanetariumWpf.Model
                 Fill = new SolidColorBrush(Color),
                 Height = Size,
                 Width = Size,
-                Margin = new Thickness(Position.X * WorldState.Scale - Radius, Position.Y * WorldState.Scale - sizeYOffset, 0, 0)
+                Margin = new System.Windows.Thickness(Position.X * WorldState.Scale - Radius, Position.Y * WorldState.Scale - sizeYOffset, 0, 0)
             };
         }
 

@@ -81,7 +81,7 @@ namespace PlanetariumWpf
             var rand = new Random();
             var size = rand.Next() % 9 + 1;
             var point = e.GetPosition(this);
-            var position = new Point(point.X / WorldState.Scale, point.Y / WorldState.Scale);
+            var position = new VectorAndPoint.ValTypes.Point(point.X / WorldState.Scale, point.Y / WorldState.Scale);
 
             context.Entities.Add(new Planet(size, position));
         }
@@ -94,7 +94,7 @@ namespace PlanetariumWpf
             for (var i = 0; i < 100; i++)
             {
                 var size = rand.Next() % 9 + 1;
-                var point = new Point(rand.Next() % 1500, rand.Next() % 800);
+                var point = new VectorAndPoint.ValTypes.Point(rand.Next() % 1500, rand.Next() % 800);
                 context.Entities.Add(new Planet(size, point));
             }
         }
