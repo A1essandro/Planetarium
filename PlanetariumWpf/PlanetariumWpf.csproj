@@ -143,7 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\AddEntitiesCommand.cs" />
+    <Compile Include="Commands\EntitiesCommandBase.cs" />
     <Compile Include="Commands\ResetWorldCommand.cs" />
+    <Compile Include="Commands\ZoomCommand.cs" />
     <Compile Include="FrameManager.cs" />
     <Compile Include="Model\AfterCollisionPlanetFactory.cs" />
     <Compile Include="Model\Planet.cs" />

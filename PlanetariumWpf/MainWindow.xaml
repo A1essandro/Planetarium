@@ -24,9 +24,9 @@
             Scale: <TextBlock Text="{Binding Path=(local:WorldState.Scale), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             Offset: <TextBlock Text="{Binding Path=(local:WorldState.Offset), Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </TextBlock>
-        <Button Name="PlanetGeneratorButton" Grid.Row="1" Grid.Column="0">Create 100 planets</Button>
+        <Button Name="PlanetGeneratorButton" Command="{Binding GenerateCommand}" Grid.Row="1" Grid.Column="0">Create 100 planets</Button>
         <Button Name="PlanetResetButton" Command="{Binding ResetCommand}" Grid.Row="1" Grid.Column="1">Reset world</Button>
-        <Canvas Grid.Row="2"  Name="World" Background="#FF040027" Grid.ColumnSpan="2">
+        <Canvas Grid.Row="2" Name="World" Background="#FF040027" Grid.ColumnSpan="2" Focusable="True">
         </Canvas>
     </Grid>
 </Window>

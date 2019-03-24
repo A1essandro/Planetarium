@@ -1,11 +1,11 @@
 ﻿using Planetarium;
+using PlanetariumWpf.Model;
+using PlanetariumWpf.ViewModel;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using PlanetariumWpf.Model;
-using PlanetariumWpf.ViewModel;
 
 namespace PlanetariumWpf
 {
@@ -25,8 +25,6 @@ namespace PlanetariumWpf
 
             World.MouseLeftButtonUp += AddEntity;
             World.MouseWheel += ChangeScale;
-
-            PlanetGeneratorButton.Click += GeneratePlanets;
 
             _frameManager = new FrameManager(TimerTick, true);
 
@@ -85,20 +83,6 @@ namespace PlanetariumWpf
 
             context.Entities.Add(new Planet(size, position));
         }
-
-        private void GeneratePlanets(object sender, RoutedEventArgs e)
-        {
-            var context = DataContext as EntityOnWindowVM;
-
-            var rand = new Random();
-            for (var i = 0; i < 100; i++)
-            {
-                var size = rand.Next() % 9 + 1;
-                var point = new VectorAndPoint.ValTypes.Point(rand.Next() % 1500, rand.Next() % 800);
-                context.Entities.Add(new Planet(size, point));
-            }
-        }
-
 
     }
 }
