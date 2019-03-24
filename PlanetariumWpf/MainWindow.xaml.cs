@@ -3,7 +3,6 @@ using PlanetariumWpf.Model;
 using PlanetariumWpf.ViewModel;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -16,40 +15,28 @@ namespace PlanetariumWpf
     {
 
         private readonly FrameManager _frameManager;
-        private readonly Gravity _gravity = new Gravity(0.001);
-        private readonly CollisionManager<Planet> _collisionManager = new CollisionManager<Planet>(new AfterCollisionPlanetFactory());
 
         public MainWindow()
         {
             InitializeComponent();
 
+            DataContext = new EntityOnWindowVM();
+
             World.MouseLeftButtonUp += AddEntity;
             World.MouseWheel += ChangeScale;
 
-            _frameManager = new FrameManager(TimerTick, true);
-
-            DataContext = new EntityOnWindowVM();
+            _frameManager = new FrameManager((DataContext as EntityOnWindowVM).Universe, TimerTick, true);
         }
 
-        private async void TimerTick(object sender, EventArgs e)
+        private void TimerTick(object sender, EventArgs e)
         {
             var context = DataContext as EntityOnWindowVM;
-
-            var planets = context.Entities.OfType<Planet>();
-            await Task.Run(() => _gravity.RecalculateSpeed(planets));
-
             World.Children.Clear();
-            foreach (var entity in context.Entities.OfType<Planet>())
+            foreach (var entity in context.Universe.Entities.OfType<Planet>())
             {
                 entity.Move();
                 World.Children.Add(entity.GetRenderElement());
             }
-
-            var collisionsResult = _collisionManager.CheckCollisions(planets);
-            foreach (var toRemove in collisionsResult.DestroyedObjects)
-                context.Entities.Remove(toRemove);
-            foreach (var toAdd in collisionsResult.NewObjects)
-                context.Entities.Add(toAdd);
         }
 
         private void ChangeScale(object sender, MouseWheelEventArgs e)
@@ -81,7 +68,7 @@ namespace PlanetariumWpf
             var point = e.GetPosition(this);
             var position = new VectorAndPoint.ValTypes.Point(point.X / WorldState.Scale, point.Y / WorldState.Scale);
 
-            context.Entities.Add(new Planet(size, position));
+            context.Universe.Entities.Add(new Planet(size, position));
         }
 
     }

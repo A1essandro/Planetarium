@@ -150,6 +150,7 @@
     <Compile Include="FrameManager.cs" />
     <Compile Include="Model\AfterCollisionPlanetFactory.cs" />
     <Compile Include="Model\Planet.cs" />
+    <Compile Include="Model\Universe.cs" />
     <Compile Include="ViewModel\EntityOnWindowVM.cs" />
     <Compile Include="WorldState.cs" />
     <Page Include="MainWindow.xaml">
