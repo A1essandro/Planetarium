@@ -132,7 +132,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="VectorAndPoint, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VectorAndPoint.NetStandard.1.0.4\lib\netstandard1.3\VectorAndPoint.dll</HintPath>
+      <HintPath>..\packages\VectorAndPoint.NetStandard.1.0.5\lib\netstandard1.3\VectorAndPoint.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -143,6 +143,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\ResetWorldCommand.cs" />
     <Compile Include="FrameManager.cs" />
     <Compile Include="Model\AfterCollisionPlanetFactory.cs" />
     <Compile Include="Model\Planet.cs" />
