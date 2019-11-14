@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace Planetarium
 {
     internal sealed class GravityCache : IDisposable
     {
 
-        private Dictionary<PairKey, double> _cache = new Dictionary<PairKey, double>();
+        private ConcurrentDictionary<PairKey, double> _cache = new ConcurrentDictionary<PairKey, double>();
 
         public bool ContainsKey(IPlanet p1, IPlanet p2) => _cache.ContainsKey(new PairKey(p1, p2));
 

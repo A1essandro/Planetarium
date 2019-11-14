@@ -10,7 +10,7 @@ namespace PlanetariumWpf.ViewModel
 
         public EntityOnWindowVM()
         {
-            var gravity = new Gravity(0.001);
+            var gravity = new Gravity(0.05);
             Universe = new Universe(gravity, new CollisionManager<Planet>(new AfterCollisionPlanetFactory()));
         }
 
@@ -23,5 +23,9 @@ namespace PlanetariumWpf.ViewModel
         public AddEntitiesCommand GenerateCommand => new AddEntitiesCommand(Universe.Entities);
 
         public ZoomCommand ZoomCommand => new ZoomCommand();
+
+        public MoveByXCommand MoveByXCommand => new MoveByXCommand();
+
+        public MoveByYCommand MoveByYCommand => new MoveByYCommand();
     }
 }

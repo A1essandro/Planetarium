@@ -24,8 +24,39 @@ namespace PlanetariumWpf
 
             World.MouseLeftButtonUp += AddEntity;
             World.MouseWheel += ChangeScale;
+            World.KeyUp += KeyUpHandle;
+            Application.Current.MainWindow.KeyUp += new KeyEventHandler(KeyUpHandle);
 
             _frameManager = new FrameManager((DataContext as EntityOnWindowVM).Universe, TimerTick, true);
+        }
+
+        private void KeyUpHandle(object sender, KeyEventArgs e)
+        {
+            var context = DataContext as EntityOnWindowVM;
+            VectorAndPoint.ValTypes.Vector vector;
+            switch (e.Key)
+            {
+                case Key.Left:
+                    vector = new VectorAndPoint.ValTypes.Vector(25, 0);
+                    break;
+                case Key.Right:
+                    vector = new VectorAndPoint.ValTypes.Vector(-25, 0);
+                    break;
+                case Key.Up:
+                    vector = new VectorAndPoint.ValTypes.Vector(0, 25);
+                    break;
+                case Key.Down:
+                    vector = new VectorAndPoint.ValTypes.Vector(0, -25);
+                    break;
+                default:
+                    vector = new VectorAndPoint.ValTypes.Vector(0, 0);
+                    break;
+            }
+
+            foreach (var entity in context.Universe.Entities)
+            {
+                (entity as Planet).Move(vector);
+            }
         }
 
         private void TimerTick(object sender, EventArgs e)

@@ -13,12 +13,19 @@ namespace PlanetariumWpf.Model
         public double Radius => Size / 2;
 
         public Planet(double size, Point point)
+            : this(size, point, new Vector(0, 0))
+        {
+        }
+
+        public Planet(double size, Point point, Vector speed)
             : base(size, point, GetColor())
         {
-            Speed = new Vector(0, 0);
+            Speed = speed;
         }
 
         public void Move() => point += Speed;
+
+        public void Move(Vector speed) => point += speed;
 
         public override Shape GetRenderElement()
         {

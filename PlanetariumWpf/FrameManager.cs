@@ -1,7 +1,6 @@
 ﻿using PlanetariumWpf.Model;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 namespace PlanetariumWpf
@@ -27,7 +26,7 @@ namespace PlanetariumWpf
         private async void _calculate(object sender, EventArgs e)
         {
             var planets = _universe.Entities.OfType<Planet>();
-            await Task.Run(() => _universe.Gravity.RecalculateSpeed(planets));
+            await _universe.Gravity.RecalculateSpeed(planets);
 
             var collisionsResult = _universe.CollisionManager.CheckCollisions(planets);
             foreach (var toRemove in collisionsResult.DestroyedObjects)

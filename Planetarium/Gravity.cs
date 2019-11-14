@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows;
+using System.Threading.Tasks;
 using VectorAndPoint.ValTypes;
 
 namespace Planetarium
@@ -25,7 +25,7 @@ namespace Planetarium
         /// Change speed of each planet according to gravity calculation
         /// </summary>
         /// <param name="planets"></param>
-        public void RecalculateSpeed(IEnumerable<IPlanet> planets)
+        public async Task RecalculateSpeed(IEnumerable<IPlanet> planets)
         {
             Debug.Assert(planets != null, nameof(planets));
 
@@ -36,13 +36,19 @@ namespace Planetarium
 
             using (var cache = new GravityCache())
             {
+                var taskList = new List<Task>();
                 foreach (var planet in planets)
                 {
-                    var sum = planets.Where(p => p != planet)
-                                .Select(p => _getGravitySpeedToObject(cache, planet, p))
-                                .Aggregate((v, r) => v + r);
-                    planet.Speed += sum;
+                    taskList.Add(Task.Run(() =>
+                    {
+                        var sum = planets.Where(p => p != planet)
+                            .Select(p => _getGravitySpeedToObject(cache, planet, p))
+                            .Aggregate((v, r) => v + r);
+                        planet.Speed += sum;
+                    }));
                 }
+
+                await Task.WhenAll(taskList);
             }
         }
 
@@ -58,14 +64,16 @@ namespace Planetarium
             Debug.Assert(to != null, nameof(to));
 
             var r2 = Math.Pow(from.Position.X - to.Position.X, 2) + Math.Pow(from.Position.Y - to.Position.Y, 2);
-            return G * from.Mass * to.Mass / r2;
+            return G * to.Mass / r2;
         }
 
         private Vector _getGravitySpeedToObject(GravityCache cache, IPlanet from, IPlanet to)
         {
             double gravity;
             if (cache.ContainsKey(from, to))
+            {
                 gravity = cache.Get(from, to);
+            }
             else
             {
                 gravity = GetGravity(from, to);

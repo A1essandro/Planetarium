@@ -23,7 +23,9 @@ namespace PlanetariumWpf.Commands
             {
                 var size = rand.Next() % 9 + 1;
                 var point = new VectorAndPoint.ValTypes.Point(rand.Next() % 1500, rand.Next() % 800);
-                entities.Add(new Planet(size, point));
+
+                var speed = new VectorAndPoint.ValTypes.Vector((rand.NextDouble() - 0.5) * 3, (rand.NextDouble() - 0.5) * 3);
+                entities.Add(new Planet(size, point, speed));
             }
         }
     }
