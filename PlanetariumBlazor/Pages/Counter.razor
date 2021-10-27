@@ -1,0 +1,80 @@
+@page "/counter"
+@using Internal
+@using Planetarium
+
+<div>
+
+    <div>@ExMessage</div>
+    <div @onclick=Tick>@frame</div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 1000px">
+
+        <circle cx="100" cy="100" r="15" fill="#faa" stroke="#fff" />
+        @foreach (var planet in Universe.Objects.OfType<Planet>())
+        {
+            <circle cx=@Math.Round(planet.Position.X) cy=@Math.Round(planet.Position.Y) r=12 fill="#04dcd2" stroke="#fff" />
+            <line x1=@Math.Round(planet.Position.X) y1=@Math.Round(planet.Position.Y)
+            x2=@Math.Round(planet.Position.X+planet.Speed.X) y2=@Math.Round(planet.Position.Y+planet.Speed.Y)
+            stroke="red" />
+        }
+
+
+    </svg>
+</div>
+
+@code {
+
+    private int[] planets = Array.Empty<int>();
+    private int currentCount = 0;
+    private int frame = 1;
+    private string ExMessage = "No error";
+
+    private static IGeometry<Coordinates2D> Geometry = new Geometry2D<Coordinates2D>();
+    private static IGravity<Coordinates2D> Gravity = new Gravity<Coordinates2D>(Geometry, 0.1);
+    private IUniverseTime<Coordinates2D> UniverseTime = new UniverseTime<Coordinates2D>(Geometry, Gravity);
+    private IUniverse<Coordinates2D> Universe = new Universe<Coordinates2D>();
+
+    protected override Task OnInitializedAsync()
+    {
+        GeneratePlanets(7);
+
+        return Task.CompletedTask;
+    }
+
+    private void GeneratePlanets(int qty)
+    {
+        var rand = new Random();
+        var planets = new List<Planet>(qty);
+        for (var i = 0; i < qty; i++)
+        {
+            planets.Add(new Planet
+            {
+                Speed = new Coordinates2D(rand.Next(0, 10) - 5, rand.Next(0, 10) - 5),
+                Position = new Coordinates2D(rand.Next(0, 500), rand.Next(0, 500)),
+                Weight = rand.Next(1, 100)
+            });
+        }
+        Universe.Objects = planets.ToArray();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await Task.Delay(10);
+        await Tick();
+        StateHasChanged();
+    }
+
+    private async Task Tick()
+    {
+        try
+        {
+            await UniverseTime.Tick(Universe);
+            frame++;
+        }
+        catch (Exception ex)
+        {
+            ExMessage = string.Concat(ex.Message, ex.StackTrace);
+        }
+    }
+
+}
