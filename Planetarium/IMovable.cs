@@ -1,10 +1,12 @@
+using System.Numerics;
+
 namespace Planetarium
 {
 
-    public interface IMovable<TCoordinates> : IPositioned<TCoordinates> where TCoordinates : ICoordinates
+    public interface IMovable : IPositioned
     {
 
-        TCoordinates Speed { get; set; }
+        Vector3 Speed { get; set; }
 
     }
 

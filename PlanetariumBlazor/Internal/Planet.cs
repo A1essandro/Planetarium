@@ -1,11 +1,12 @@
 using Planetarium;
+using System.Numerics;
 
 namespace PlanetariumBlazor.Internal
 {
-    public class Planet : ISpaceObject<Coordinates2D>
+    public class Planet : ISpaceObject
     {
-        public Coordinates2D Speed { get; set; }
-        public Coordinates2D Position { get; set; }
+        public Vector3 Speed { get; set; }
+        public Vector3 Position { get; set; }
         public double Weight { get; set; }
     }
 }

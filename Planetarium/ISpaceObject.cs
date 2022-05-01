@@ -1,8 +1,7 @@
 namespace Planetarium
 {
 
-    public interface ISpaceObject<TCoordinates> : IMovable<TCoordinates>, IWeightedObject
-        where TCoordinates : ICoordinates
+    public interface ISpaceObject : IMovable, IWeightedObject
     {
 
     }

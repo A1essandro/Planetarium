@@ -1,27 +1,26 @@
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace Planetarium
 {
-    public class UniverseTime<TCoordinates> : IUniverseTime<TCoordinates> where TCoordinates : class, ICoordinates
+    public class UniverseTime : IUniverseTime
     {
 
-        private readonly IGeometry<TCoordinates> _geometry;
-        private readonly IGravity<TCoordinates> _gravity;
+        private readonly IGravity _gravity;
 
-        public UniverseTime(IGeometry<TCoordinates> geometry, IGravity<TCoordinates> gravity)
+        public UniverseTime(IGravity gravity)
         {
-            _geometry = geometry;
             _gravity = gravity;
         }
 
-        public async Task Tick(IUniverse<TCoordinates> universe)
+        public async Task Tick(IUniverse universe)
         {
             await _gravity.RecalculateAllSpeeds(universe);
 
-            foreach (var planet in universe.Objects.OfType<IMovable<TCoordinates>>())
+            foreach (var planet in universe.Objects.OfType<IMovable>())
             {
-                planet.Position = _geometry.VectorAdd(planet.Position, planet.Speed);
+                planet.Position = Vector3.Add(planet.Position, planet.Speed);
             }
         }
 

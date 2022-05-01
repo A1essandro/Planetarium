@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Planetarium
 {
 
-    public interface IUniverse<TCoordinates> where TCoordinates : class, ICoordinates
+    public interface IUniverse
     {
 
         ICollection<object> Objects { get; set; }

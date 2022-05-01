@@ -1,18 +1,15 @@
 using System;
-using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace Planetarium
 {
-    public class Gravity<TCoordinates> : IGravity<TCoordinates> where TCoordinates : class, ICoordinates, new()
+    public class Gravity : IGravity
     {
 
-        private readonly IGeometry<TCoordinates> _geometry;
-
-        public Gravity(IGeometry<TCoordinates> geometry, double g = DEFAULT_G)
+        public Gravity(double g = DEFAULT_G)
         {
-            _geometry = geometry;
             G = g;
         }
 
@@ -20,49 +17,43 @@ namespace Planetarium
 
         public double G { get; }
 
-        public Task RecalculateAllSpeeds(IUniverse<TCoordinates> universe)
+        public Task RecalculateAllSpeeds(IUniverse universe)
         {
-            var planets = universe.Objects.OfType<ISpaceObject<TCoordinates>>().ToList();
+            var planets = universe.Objects.OfType<ISpaceObject>().ToList();
 
             if (planets.Count() < 2)
                 return Task.CompletedTask;
 
-            // foreach (var planet in planets)
-            // {
-            //     var sum = planets.Where(p => p.GetHashCode() != planet.GetHashCode())
-            //         .Select(p => GetGravitySpeedToObject(planet, p))
-            //         .Aggregate((v, r) => _geometry.VectorAdd(v, r));
-            //     //planet.Speed = sum;// _geometry.VectorAdd(planet.Speed, sum);
-            // }
-
-            // return Task.CompletedTask;
-
-            var tasks = planets.Select(planet => Task.Run(() =>
+            planets.AsParallel().Select(planet =>
             {
                 var sum = planets.Where(p => p != planet)
                     .Select(p => GetGravitySpeedToObject(planet, p))
-                    .Aggregate((v, r) => _geometry.VectorAdd(v, r));
-                planet.Speed = _geometry.VectorAdd(planet.Speed, sum);
-            }));
+                    .Aggregate((v, r) => Vector3.Add(v, r));
+                planet.Speed = Vector3.Add(planet.Speed, sum);
 
-            return Task.WhenAll(tasks);
+                return planet.Speed;
+            }).ToArray();
+
+            return Task.CompletedTask;
         }
 
-        private TCoordinates GetGravitySpeedToObject(ISpaceObject<TCoordinates> from, ISpaceObject<TCoordinates> to)
+        private Vector3 GetGravitySpeedToObject(ISpaceObject from, ISpaceObject to)
         {
             var gravityForce = GetForceOfGravity(from, to);
-            var substraction = _geometry.VectorSubstruct(to.Position, from.Position);
-            var gravityVector = _geometry.VectorMultiply(substraction, gravityForce);
-            var withInertia = _geometry.VectorMultiply(gravityVector, 1 / from.Weight);
+            var substraction = Vector3.Subtract(to.Position, from.Position);
+            var gravityVector = Vector3.Multiply(substraction, gravityForce);
+            var withInertia = Vector3.Multiply(gravityVector, 1 / (float)from.Weight);
 
             return withInertia;
         }
 
-        private double GetForceOfGravity(ISpaceObject<TCoordinates> obj1, ISpaceObject<TCoordinates> obj2)
+        private float GetForceOfGravity(ISpaceObject obj1, ISpaceObject obj2)
         {
-            var distance = _geometry.GetDistance(obj1.Position, obj2.Position);
+            var distance = Vector3.Distance(obj1.Position, obj2.Position);
 
-            return G * (obj1.Weight * obj2.Weight) / Math.Pow(distance, 2);
+            var result = G * (obj1.Weight * obj2.Weight) / Math.Pow(distance, 2);
+
+            return (float)result;
         }
 
     }

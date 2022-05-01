@@ -1,9 +1,11 @@
+using System.Numerics;
+
 namespace Planetarium
 {
-    public interface IPositioned<TCoordinates> where TCoordinates : ICoordinates
+    public interface IPositioned
     {
 
-        TCoordinates Position { get; set; }
+        Vector3 Position { get; set; }
 
     }
 
